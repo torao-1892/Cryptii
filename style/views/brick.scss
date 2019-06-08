@@ -1,0 +1,177 @@
+
+.brick {
+  $block: &;
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  user-select: none;
+  @extend %s-sheet;
+
+  @media screen and (max-width: 448px) {
+    // styles applied when box reaches screen size
+    border-radius: 0;
+  }
+
+  &__header {
+    position: relative;
+    padding: 16px;
+    height: 104px;
+    border-bottom: 1px solid $c-line;
+    cursor: move;
+    cursor: grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+
+    .pipe--dragging & {
+
+      // inherit grabbing cursor from pipe
+      cursor: inherit;
+    }
+  }
+
+  &__btn-menu {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 17px 16px;
+    font-size: 0;
+
+    &::before {
+      content: '';
+      display: block;
+      width: 3px;
+      height: 14px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-image: inline-svg('icons/menu.svg',
+        (circle: (fill: $c-text-detail)));
+    }
+
+    &:hover::before {
+      background-image: inline-svg('icons/menu.svg',
+        (circle: (fill: $c-text)));
+    }
+  }
+
+  &__menu {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    min-width: 160px;
+
+    @include breakpoint(xs) {
+      right: 8px;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: row;
+    margin: 0 -6px;
+  }
+
+  &__action {
+    display: block;
+    padding: 0 6px;
+    @extend %t-brick-action;
+    color: $c-text-detail;
+
+    &--active {
+      color: inherit;
+    }
+  }
+
+  &__title {
+    margin-top: 24px;
+    @extend %t-brick-headline;
+  }
+
+  &__btn-toggle {
+    display: inline-block;
+    position: relative;
+    max-width: 100%;
+    padding-right: 24px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &::after {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 20px;
+      height: 20px;
+      transform: translate(0, 3px);
+      margin-left: 2px;
+      line-height: 0;
+      background-image: inline-svg('icons/arrow-drop-down.svg',
+        (path: (fill: $c-primary)));
+      background-repeat: no-repeat;
+      background-size: 150% 150%;
+      background-position: center;
+
+      #{$block}.encoder & {
+        background-image: inline-svg('icons/arrow-drop-down.svg',
+          (path: (fill: $c-encoder)));
+      }
+    }
+  }
+
+  &__content {
+
+  }
+
+  &__status {
+    padding: 13px 16px;
+    min-height: 48px;
+    @extend %t-text;
+    word-break: break-word;
+  }
+
+  &__status-icon {
+    display: inline-block;
+    position: relative;
+    top: 3px;
+    width: 16px;
+    height: 16px;
+    margin-right: 8px;
+    background-repeat: no-repeat;
+    background-size: 100% auto;
+
+    #{$block}__status--error & {
+      background-image: inline-svg('icons/error.svg',
+        (path: (fill: $c-text-error)));
+    }
+
+    #{$block}__status--forward &,
+    #{$block}__status--backward & {
+      background-image: inline-svg('icons/arrow-left.svg',
+        (path: (fill: $c-text-detail)));
+
+      @include breakpoint(xs, s) {
+        transform: rotate(90deg);
+      }
+    }
+
+    #{$block}__status--forward & {
+      transform: rotate(180deg);
+
+      @include breakpoint(xs, s) {
+        transform: rotate(270deg);
+      }
+    }
+  }
+
+  &__status-message {
+    display: inline;
+    color: $c-text-detail;
+    user-select: auto;
+
+    #{$block}__status--error & {
+      color: $c-text-error;
+    }
+  }
+}

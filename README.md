@@ -1,38 +1,103 @@
-Cryptii
-=======
-Don't leave your messages plaintext on public places.
-Cryptii is an OpenSource web application under the MIT license where you can convert, encrypt and decrypt content between different format systems.
-This happens fully in your browser using JavaScript, no content will be sent to any kind of server.
-In addition, you can download and use this web app offline as described below.
-Any feedback appreciated, just leave me a tweet or contribute to this project.
+# cryptii
 
-Visit the web application: [http://cryptii.com/](http://cryptii.com/)
+[![Build Status](https://travis-ci.org/cryptii/cryptii.svg?branch=dev)](https://travis-ci.org/cryptii/cryptii)
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+[![MIT license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md)
 
-## Offline usage
-To use Cryptii offline just download or clone this repository to your computer and open the `local.html` file in you browser. Please note that the local version will not be updated automatically, use the online version of Cryptii to be up-to-date.
+Web app and framework offering modular conversion, encoding and encryption. Translations are done client side without any server interaction — [cryptii.com](https://cryptii.com)
 
-In case you want to edit and test the application scripts, use the `source.html` file. It includes the uncompressed source scripts from the `source-js` folder.
+## Getting started
 
-## URL structure
-Cryptii supports reading content, interpret format and convert format with their options from the given URL. This makes it possible for you to generate URLs in third-party applications.
+Several quick start options are available:
 
-The basic URL structure looks like following ([example link](http://cryptii.com/caesar;shift:12/text/FTUE%20UE%20M%20FQEF%20RAD%20SUFTGN.)):
-<pre>
-http://cryptii.com/[format];[options]/[format];[options]/[content]
-</pre>
+- Use the [latest live version](https://cryptii.com) or [download the latest release](https://github.com/cryptii/cryptii/releases/latest).
+- Clone the repo: `git clone git@github.com:cryptii/cryptii.git`
+- Install the [node](https://nodejs.org/) version specified in `.nvmrc`.
+- Run `npm install` to install the dependencies.
+- Run `npm run-script build` to build into the `dist/` folder.
+- Run `npm run-script test` to test the source code.
+- Run `npm run-script watch` to watch for changes.
 
-| Placeholder  | Description   |
-| ------------ | ------------- |
-| `format`     | Describes the interpret (first) or convert (second) format. If you want to open the interpret or convert format selection, just replace the format by the magic word *select*. |
-| `options`    | Options applied on the given format. Find the option definition for each format in the [format source code](https://github.com/the2f/Cryptii/tree/master/js-source/conversion/formats). Syntax: `[opt]:[val];` |
-| `content`     | Url encoded (rawurlencode in php) content. |
+## Concepts
 
-## License
-The MIT License (MIT)
+This framework and web app tries to reflect a wide variety of ciphers, formats, algorithms and methods (called 'bricks') while keeping them easily combinable. There are two categories of bricks: encoders and viewers.
 
-Copyright (c) 2013 Fränz Friederes <[fraenz@frieder.es](mailto:fraenz@frieder.es)>
+### Encoders
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
-The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+Encoders manipulate content by encoding or decoding it in a specific way and using specific settings.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+| Name | Category | Description |
+| ---- | -------- | ----------- |
+| `a1z26` | Ciphers | Number to letter encoder (A1Z26) |
+| `affine-cipher` | Ciphers | [Affine Cipher](https://en.wikipedia.org/wiki/Affine_cipher) |
+| `alphabetical-substitution` | Ciphers | [Alphabetical substitution](https://en.wikipedia.org/wiki/Substitution_cipher#Simple_substitution) |
+| `ascii85` | Encoding | [Ascii85 / Base85](https://en.wikipedia.org/wiki/Ascii85) incl. variant [Z85](https://rfc.zeromq.org/spec:32/Z85/) |
+| `base32` | Encoding | [Base32](https://en.wikipedia.org/wiki/Base32) incl. variants base32hex, z-base-32, … |
+| `base64` | Encoding | [Base64](https://en.wikipedia.org/wiki/Base64) incl. variants base64url, … |
+| `bitwise-operation` | Transform | [Bitwise operations](https://en.wikipedia.org/wiki/Bitwise_operation) (NOT, AND, OR, …) |
+| `block-cipher` | Modern cryptography | [Block ciphers](https://en.wikipedia.org/wiki/Block_cipher) incl. [AES](https://en.wikipedia.org/wiki/Advanced_Encryption_Standard) |
+| `bootstring` | Encoding | [Bootstring](https://tools.ietf.org/html/rfc3492) |
+| ↳ `punycode` | Encoding | [Punycode](https://tools.ietf.org/html/rfc3492) |
+| `caesar-cipher` | Ciphers | [Caesar cipher](https://en.wikipedia.org/wiki/Caesar_cipher) |
+| `case-transform` | Transform | Transforms to upper case, lower case, … |
+| `enigma` | Ciphers | [Enigma machine](https://en.wikipedia.org/wiki/Enigma_machine) incl. 13 models |
+| `hash` | Modern cryptography | Creating a [message digest](https://en.wikipedia.org/wiki/Cryptographic_hash_function) |
+| ↳ `hmac` | Modern cryptography | Creating a [Hash-based message authentication code](https://en.wikipedia.org/wiki/Hash-based_message_authentication_code) |
+| `integer` | Encoding | Translates between bytes and [integers](https://en.wikipedia.org/wiki/Integer_(computer_science)) |
+| `morse-code` | Alphabets | [Morse code](https://en.wikipedia.org/wiki/Morse_code) (English) |
+| `numeral-system` | Transform | Translates numerals between systems |
+| `polybius-square` | Ciphers | [Polybius square](https://en.wikipedia.org/wiki/Polybius_square) |
+| ↳ `bifid-cipher` | Ciphers | [Bifid cipher](https://en.wikipedia.org/wiki/Bifid_cipher) |
+| ↳ `nihilist-cipher` | Ciphers | [Nihilist cipher](https://en.wikipedia.org/wiki/Nihilist_cipher) |
+| ↳ `tap-code` | Ciphers | [Tap code](https://en.wikipedia.org/wiki/Tap_code) |
+| `rc4` | Modern cryptography | [RC4](https://en.wikipedia.org/wiki/RC4) incl. RC4-drop |
+| `reverse` | Transform | Reverses the order of bytes, characters or lines |
+| `rot13` | Ciphers | [ROT13](https://en.wikipedia.org/wiki/ROT13) incl. variants ROT5, ROT18 & ROT47 |
+| `spelling-alphabet` | Alphabets | Several [spelling alphabets](https://en.wikipedia.org/wiki/Spelling_alphabet) |
+| `unicode-code-points` | Encoding | Encoding to Unicode code points in given format |
+| `url-encoding` | Encoding | [URL encoding / Percent-encoding](https://en.wikipedia.org/wiki/Percent-encoding) |
+| `vigenere-cipher` | Ciphers | [Vigenère cipher](https://en.wikipedia.org/wiki/Vigen%C3%A8re_cipher) incl. [Beaufort cipher](https://en.wikipedia.org/wiki/Beaufort_cipher) variants |
+
+Example usage:
+
+```javascript
+const bricks = cryptii.BrickFactory.getInstance()
+const encoder = bricks.create('rot13')
+encoder.setSettingValue('variant', 'rot47')
+const result = encoder.encode('Hello World') // returns a Chain object
+result.getString() // returns 'w6==@ (@C=5'
+```
+
+### Viewers
+
+Viewers allow users to view and edit content in a specific way or format.
+
+| Name | Category | Description |
+| ---- | -------- | ----------- |
+| `text` | View | Viewing and editing in plain text |
+| `bytes` | View | Viewing and editing bytes |
+
+### Chains
+
+Chain objects encapsulate the actual content used and returned by encoders and viewers. This content can either be a string, an array of Unicode code points or a `Uint8Array` of bytes.
+
+Chains are immutable. You define its content by passing one of these representations as first argument to the constructor.
+
+```javascript
+const a = new cryptii.Chain('🦊🚀')
+const b = new cryptii.Chain([129418, 128640])
+const c = new cryptii.Chain(new Uint8Array([240, 159, 166, 138, 240, 159, 154, 128]))
+cryptii.Chain.isEqual(a, b, c) // returns true
+```
+
+The object handles the translation between these representations lazily for you. You can access any of these through getter and additional convenience methods.
+
+```javascript
+const string = chain.getString()
+const codePoints = chain.getCodePoints()
+const bytes = chain.getBytes()
+```
+
+## Changelog
+
+See [the Releases section of the GitHub repository](https://github.com/cryptii/cryptii/releases) for changelogs for each release version of cryptii.
